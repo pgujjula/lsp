@@ -374,7 +374,7 @@ shutdownRequestHandler = \_req k -> do
 handleConfigChange :: Message WorkspaceDidChangeConfiguration -> LspM config ()
 handleConfigChange req = do
   parseConfig <- LspT $ asks resParseConfig
-  res <- stateState resConfig $ \oldConfig -> case parseConfig oldConfig (req ^. LSP.params . LSP.settings) of
+  res <- setConfig $ \oldConfig -> case parseConfig oldConfig (req ^. LSP.params . LSP.settings) of
     Left err -> (Left err, oldConfig)
     Right !newConfig -> (Right (), newConfig)
   case res of

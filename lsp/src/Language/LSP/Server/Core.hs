@@ -452,11 +452,17 @@ freshLspId = do
 -- ---------------------------------------------------------------------
 
 -- | The current configuration from the client as set via the @initialize@ and
--- @workspace/didChangeConfiguration@ requests.
+-- @workspace/didChangeConfiguration@ requests, as well as by calls to
+-- 'setConfig'.
 getConfig :: MonadLsp config m => m config
 getConfig = getsState resConfig
 
 {-# INLINE getConfig #-}
+
+setConfig :: MonadLsp config m => (config -> (a,config)) -> m a
+setConfig = stateState resConfig
+
+{-# INLINE setConfig #-}
 
 getClientCapabilities :: MonadLsp config m => m J.ClientCapabilities
 getClientCapabilities = resClientCapabilities <$> getLspEnv
